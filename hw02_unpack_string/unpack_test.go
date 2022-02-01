@@ -33,6 +33,24 @@ func TestUnpack(t *testing.T) {
 	}
 }
 
+func TestUnpackSpecial(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{input: "ТакЪ0 то3ж2е1 можно!3", expected: "Так тооожже можно!!!"},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.input, func(t *testing.T) {
+			result, err := Unpack(tc.input)
+			require.NoError(t, err)
+			require.Equal(t, tc.expected, result)
+		})
+	}
+}
+
 func TestUnpackInvalidString(t *testing.T) {
 	invalidStrings := []string{"3abc", "45", "aaa10b"}
 	for _, tc := range invalidStrings {
