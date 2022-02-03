@@ -39,9 +39,8 @@ func (c *lruCache) Get(key Key) (interface{}, bool) {
 	if node, ok := c.items[key]; ok {
 		c.queue.MoveToFront(node)
 		return node.Value.(cacheItem).value, ok
-	} else {
-		return nil, ok
 	}
+	return nil, false
 }
 
 func (c *lruCache) Clear() {
