@@ -50,7 +50,52 @@ func TestCache(t *testing.T) {
 	})
 
 	t.Run("purge logic", func(t *testing.T) {
-		// Write me
+		c := NewCache(5)
+
+		wasInCache := c.Set("aaa", 100)
+		require.False(t, wasInCache)
+		wasInCache = c.Set("aaa", 101)
+		require.True(t, wasInCache)
+
+		c.Clear()
+
+		wasInCache = c.Set("aaa", 110)
+		require.False(t, wasInCache)
+
+		c.Clear()
+
+		val, ok := c.Get("aaa")
+		require.False(t, ok)
+		require.Equal(t, nil, val)
+	})
+
+	t.Run("capacity overflow", func(t *testing.T) {
+		c := NewCache(1)
+
+		wasInCache := c.Set("aaa", 100)
+		require.False(t, wasInCache)
+		wasInCache = c.Set("bbb", 200)
+		require.False(t, wasInCache)
+		wasInCache = c.Set("aaa", 300)
+		require.False(t, wasInCache)
+
+		val, ok := c.Get("bbb")
+		require.False(t, ok)
+		require.Equal(t, nil, val)
+		val, ok = c.Get("aaa")
+		require.True(t, ok)
+		require.Equal(t, 300, val)
+	})
+
+	t.Run("capacity is zero", func(t *testing.T) {
+		c := NewCache(0)
+
+		wasInCache := c.Set("aaa", 100)
+		require.False(t, wasInCache)
+
+		val, ok := c.Get("aaa")
+		require.False(t, ok)
+		require.Equal(t, nil, val)
 	})
 }
 
