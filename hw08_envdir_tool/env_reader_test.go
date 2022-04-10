@@ -15,7 +15,9 @@ func TestReadDir(t *testing.T) {
 	})
 
 	t.Run("env", func(t *testing.T) {
-		env, _ := ReadDir(fromDir)
+		env, err := ReadDir(fromDir)
+
+		require.NoError(t, err)
 
 		require.Equal(t, env["BAR"].Value, "bar")
 		require.False(t, env["BAR"].NeedRemove)
